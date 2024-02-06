@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	repository "github.com/spacetronot-research-team/erago-example/internal/repository/mock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	repository "github.com/spacetronot-research-team/erago-example/internal/repository/mock"
 )
 
 func Test_helloWorldService_Bar(t *testing.T) {
@@ -20,7 +20,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 		name    string
 		mock    func(f fields)
 		args    args
-		wantErr bool
+		wantErr error
 	}{
 		{
 			name: "bar err foo",
@@ -31,7 +31,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: true,
+			wantErr: ErrGarply,
 		},
 		{
 			name: "bar err baz",
@@ -45,7 +45,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: true,
+			wantErr: ErrWaldo,
 		},
 		{
 			name: "bar success",
@@ -59,7 +59,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: false,
+			wantErr: nil,
 		},
 	}
 	for _, tt := range tests {
@@ -77,11 +77,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			}
 
 			err := hws.Bar(tt.args.ctx)
-			if tt.wantErr {
-				assert.NotNil(t, err)
-			} else {
-				assert.Nil(t, err)
-			}
+			assert.ErrorIs(t, err, tt.wantErr)
 		})
 	}
 }

@@ -1,10 +1,15 @@
 package http
 
 import (
+	"errors"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spacetronot-research-team/erago-example/internal/service"
+)
+
+var (
+	ErrPlugh = errors.New("err jklasjd")
 )
 
 type HelloWorldController struct {
@@ -20,6 +25,7 @@ func NewHelloWorldController(helloWorldService service.HelloWorld) *HelloWorldCo
 // Qux babibu.
 func (hwc *HelloWorldController) Qux(ctx *gin.Context) {
 	if err := hwc.helloWorldService.Bar(ctx); err != nil {
+		err = errors.Join(err, ErrPlugh)
 		log.Println(err)
 		return
 	}

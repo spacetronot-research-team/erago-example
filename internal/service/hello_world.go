@@ -2,9 +2,14 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/spacetronot-research-team/erago-example/internal/repository"
+)
+
+var (
+	ErrGarply = errors.New("err jasdfsefs")
+	ErrWaldo  = errors.New("err jasdf")
 )
 
 type HelloWorld interface {
@@ -25,11 +30,11 @@ func NewHelloWorldService(helloWorldRepository repository.HelloWorld) HelloWorld
 // Bar blablabla.
 func (hws *helloWorldService) Bar(ctx context.Context) error {
 	if err := hws.helloWorldRepository.Foo(ctx); err != nil {
-		return fmt.Errorf("err babibu: %v", err)
+		return errors.Join(err, ErrGarply)
 	}
 
 	if err := hws.helloWorldRepository.Baz(ctx); err != nil {
-		return fmt.Errorf("err zzzzzz: %v", err)
+		return errors.Join(err, ErrWaldo)
 	}
 
 	return nil
