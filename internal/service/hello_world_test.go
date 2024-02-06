@@ -31,7 +31,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: Err7624329967302134303,
+			wantErr: Err7647940019703865992,
 		},
 		{
 			name: "bar err baz",
@@ -45,7 +45,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: Err7969868174642337230,
+			wantErr: Err6907370662868939236,
 		},
 		{
 			name: "bar success",
