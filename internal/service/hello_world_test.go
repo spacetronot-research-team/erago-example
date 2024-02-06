@@ -4,14 +4,14 @@ import (
 	"context"
 	"testing"
 
-	repository "github.com/spacetronot-research-team/erago-example/internal/repository/mock"
+	"github.com/spacetronot-research-team/erago-example/internal/repository/mockrepository"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func Test_helloWorldService_Bar(t *testing.T) {
 	type fields struct {
-		helloWorldRepository *repository.MockHelloWorld
+		helloWorldRepository *mockrepository.MockHelloWorld
 	}
 	type args struct {
 		ctx context.Context
@@ -31,7 +31,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: ErrGarply,
+			wantErr: Err7624329967302134303,
 		},
 		{
 			name: "bar err baz",
@@ -45,7 +45,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: ErrWaldo,
+			wantErr: Err7969868174642337230,
 		},
 		{
 			name: "bar success",
@@ -68,7 +68,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			defer ctrl.Finish()
 
 			f := fields{
-				helloWorldRepository: repository.NewMockHelloWorld(ctrl),
+				helloWorldRepository: mockrepository.NewMockHelloWorld(ctrl),
 			}
 			tt.mock(f)
 

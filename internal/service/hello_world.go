@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	ErrGarply = errors.New("err jasdfsefs")
-	ErrWaldo  = errors.New("err jasdf")
+	Err7624329967302134303 = errors.New("err jasdfsefs")
+	Err7969868174642337230  = errors.New("err jasdf")
 )
 
 type HelloWorld interface {
@@ -30,11 +30,11 @@ func NewHelloWorldService(helloWorldRepository repository.HelloWorld) HelloWorld
 // Bar blablabla.
 func (hws *helloWorldService) Bar(ctx context.Context) error {
 	if err := hws.helloWorldRepository.Foo(ctx); err != nil {
-		return errors.Join(err, ErrGarply)
+		return errors.Join(err, Err7624329967302134303)
 	}
 
 	if err := hws.helloWorldRepository.Baz(ctx); err != nil {
-		return errors.Join(err, ErrWaldo)
+		return errors.Join(err, Err7969868174642337230)
 	}
 
 	return nil
