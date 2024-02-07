@@ -10,8 +10,8 @@ import (
 //go:generate mockgen -source=hello_world.go -destination=mockrepository/hello_world.go -package=mockrepository
 
 var (
-	Err7647940019703865992  = errors.New("err blabla")
-	Err6907370662868939236 = errors.New("err babibu")
+	Err5974383538316647993  = errors.New("err blabla")
+	Err2409322033459614448 = errors.New("err babibu")
 )
 
 type HelloWorld interface {
@@ -35,7 +35,7 @@ func NewHelloWorldRepository(db *gorm.DB) HelloWorld {
 func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
 	err := gorm.ErrRecordNotFound // error from query
 	if err != nil {
-		return errors.Join(err, Err7647940019703865992)
+		return errors.Join(err, Err5974383538316647993)
 	}
 	return nil
 }
@@ -44,7 +44,7 @@ func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
 func (hwr *helloWorldRepository) Baz(ctx context.Context) error {
 	err := gorm.ErrRecordNotFound // error from query
 	if err != nil {
-		return errors.Join(err, Err6907370662868939236)
+		return errors.Join(err, Err2409322033459614448)
 	}
 	return nil
 }

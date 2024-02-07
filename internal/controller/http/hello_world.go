@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	Err7647940019703865992 = errors.New("err jklasjd")
+	Err5974383538316647993 = errors.New("err jklasjd")
 )
 
 type HelloWorldController struct {
@@ -25,7 +25,7 @@ func NewHelloWorldController(helloWorldService service.HelloWorld) *HelloWorldCo
 // Qux babibu.
 func (hwc *HelloWorldController) Qux(ctx *gin.Context) {
 	if err := hwc.helloWorldService.Bar(ctx); err != nil {
-		err = errors.Join(err, Err7647940019703865992)
+		err = errors.Join(err, Err5974383538316647993)
 		log.Println(err)
 		return
 	}
