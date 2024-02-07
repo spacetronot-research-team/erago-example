@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrNnfvj = errors.New("err jklasjd")
+	ErrEvhqw = errors.New("err jklasjd")
 )
 
 type HelloWorldController struct {
@@ -25,7 +25,7 @@ func NewHelloWorldController(helloWorldService service.HelloWorld) *HelloWorldCo
 // Qux babibu.
 func (hwc *HelloWorldController) Qux(ctx *gin.Context) {
 	if err := hwc.helloWorldService.Bar(ctx); err != nil {
-		err = errors.Join(err, ErrNnfvj)
+		err = errors.Join(err, ErrEvhqw)
 		log.Println(err)
 		return
 	}
