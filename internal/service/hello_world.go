@@ -7,11 +7,11 @@ import (
 	"github.com/spacetronot-research-team/erago-example/internal/repository"
 )
 
-//go:generate mockgen -source=hello_world.go -destination=mockservice/hello_world.go -package=mockservice
+//go:generate mockgen -source=hello_world.go -destination=mock/hello_world.go -package=mock
 
 var (
 	ErrEvhqw = errors.New("err jasdfsefs")
-	ErrQgogf  = errors.New("err jasdf")
+	ErrQgogf = errors.New("err jasdf")
 )
 
 type HelloWorld interface {

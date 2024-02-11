@@ -4,14 +4,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/spacetronot-research-team/erago-example/internal/repository/mockrepository"
+	"github.com/spacetronot-research-team/erago-example/internal/repository/mock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func Test_helloWorldService_Bar(t *testing.T) {
 	type fields struct {
-		helloWorldRepository *mockrepository.MockHelloWorld
+		helloWorldRepository *mock.MockHelloWorld
 	}
 	type args struct {
 		ctx context.Context
@@ -68,7 +68,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			defer ctrl.Finish()
 
 			f := fields{
-				helloWorldRepository: mockrepository.NewMockHelloWorld(ctrl),
+				helloWorldRepository: mock.NewMockHelloWorld(ctrl),
 			}
 			tt.mock(f)
 

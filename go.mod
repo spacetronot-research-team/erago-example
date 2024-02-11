@@ -3,6 +3,7 @@ module github.com/spacetronot-research-team/erago-example
 go 1.21.6
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
 	github.com/rubenv/sql-migrate v1.6.1

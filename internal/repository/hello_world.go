@@ -7,18 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-//go:generate mockgen -source=hello_world.go -destination=mockrepository/hello_world.go -package=mockrepository
+//go:generate mockgen -source=hello_world.go -destination=mock/hello_world.go -package=mock
 
 var (
-	ErrEvhqw  = errors.New("err blabla")
+	ErrEvhqw = errors.New("err blabla")
 	ErrQgogf = errors.New("err babibu")
 )
 
 type HelloWorld interface {
-	// Foo blablabla.
 	Foo(ctx context.Context) error
-	// Baz blablablabla.
 	Baz(ctx context.Context) error
+	Bar(ctx context.Context) int32
 }
 
 type helloWorldRepository struct {
@@ -31,7 +30,6 @@ func NewHelloWorldRepository(db *gorm.DB) HelloWorld {
 	}
 }
 
-// Foo blablablablabla.
 func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
 	err := gorm.ErrRecordNotFound // error from query
 	if err != nil {
@@ -40,11 +38,18 @@ func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
 	return nil
 }
 
-// Baz blablablablabla.
 func (hwr *helloWorldRepository) Baz(ctx context.Context) error {
 	err := gorm.ErrRecordNotFound // error from query
 	if err != nil {
 		return errors.Join(err, ErrQgogf)
 	}
 	return nil
+}
+
+func (hwr *helloWorldRepository) Bar(ctx context.Context) int32 {
+	var result int32
+	if err := hwr.db.Raw("SELECT 1").Scan(&result).Error; err != nil {
+		return 0
+	}
+	return result
 }
