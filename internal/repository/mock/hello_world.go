@@ -39,20 +39,6 @@ func (m *MockHelloWorld) EXPECT() *MockHelloWorldMockRecorder {
 	return m.recorder
 }
 
-// Bar mocks base method.
-func (m *MockHelloWorld) Bar(ctx context.Context) int32 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Bar", ctx)
-	ret0, _ := ret[0].(int32)
-	return ret0
-}
-
-// Bar indicates an expected call of Bar.
-func (mr *MockHelloWorldMockRecorder) Bar(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bar", reflect.TypeOf((*MockHelloWorld)(nil).Bar), ctx)
-}
-
 // Baz mocks base method.
 func (m *MockHelloWorld) Baz(ctx context.Context) error {
 	m.ctrl.T.Helper()

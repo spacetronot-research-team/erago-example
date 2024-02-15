@@ -10,46 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestNewHelloWorldRepository(t *testing.T) {
-	db, _, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer db.Close()
-
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{Conn: db}), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a gorm stub database connection", err)
-	}
-
-	type args struct {
-		db *gorm.DB
-	}
-	tests := []struct {
-		name string
-		args args
-		want HelloWorld
-	}{
-		{
-			name: "Initialize a new HelloWorld repository instance",
-			args: args{
-				db: gormDB,
-			},
-			want: &helloWorldRepository{
-				db: gormDB,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := NewHelloWorldRepository(tt.args.db)
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func Test_helloWorldRepository_Bar(t *testing.T) {
-	expectedQuery := "SELECT 1"
+func Test_helloWorldRepository_Foo(t *testing.T) {
 	type fields struct {
 		db sqlmock.Sqlmock
 	}
@@ -57,32 +18,34 @@ func Test_helloWorldRepository_Bar(t *testing.T) {
 		ctx context.Context
 	}
 	tests := []struct {
-		name string
-		args args
-		mock func(f fields)
-		want int32
+		name    string
+		mock    func(f fields)
+		args    args
+		wantErr error
 	}{
 		{
 			name: "Success to retrieve query result",
+			mock: func(f fields) {
+				f.db.ExpectQuery("SELECT 1").
+					WillReturnRows(
+						sqlmock.NewRows([]string{"column"}).AddRow(1),
+					)
+			},
 			args: args{
 				ctx: context.TODO(),
 			},
-			mock: func(f fields) {
-				f.db.ExpectQuery(expectedQuery).
-					WillReturnRows(sqlmock.NewRows([]string{"column"}).
-						AddRow(1))
-			},
-			want: 1,
+			wantErr: nil,
 		},
 		{
 			name: "Error when retrieve query result",
+			mock: func(f fields) {
+				f.db.ExpectQuery("SELECT 1").
+					WillReturnError(assert.AnError)
+			},
 			args: args{
 				ctx: context.TODO(),
 			},
-			mock: func(f fields) {
-				f.db.ExpectQuery(expectedQuery).WillReturnError(assert.AnError)
-			},
-			want: 0,
+			wantErr: ErrKPbpe,
 		},
 	}
 	for _, tt := range tests {
@@ -103,11 +66,12 @@ func Test_helloWorldRepository_Bar(t *testing.T) {
 			}
 			tt.mock(f)
 
-			hwr := &helloWorldRepository{
+			hw := &helloWorldRepository{
 				db: gormDB,
 			}
-			got := hwr.Bar(tt.args.ctx)
-			assert.Equal(t, tt.want, got)
+
+			got := hw.Foo(tt.args.ctx)
+			assert.ErrorIs(t, got, tt.wantErr)
 		})
 	}
 }

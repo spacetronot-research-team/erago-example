@@ -1,71 +1,94 @@
 package http
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/spacetronot-research-team/erago-example/internal/service/mock"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func TestHelloWorldController_Qux(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
 	type fields struct {
 		helloWorldService *mock.MockHelloWorld
 	}
 	type args struct {
-		// Add structs, dtos, or anything
+		reqHeader map[string]string
+		reqBody gin.H
 	}
 	tests := []struct {
 		name     string
 		mock     func(f fields)
 		args     args
 		wantCode int
+		wantBody gin.H
 	}{
 		{
-			name: "OK",
+			name: "Success",
 			mock: func(f fields) {
 				f.helloWorldService.EXPECT().
 					Bar(gomock.Any()).
 					Return(nil)
 			},
+			args:     args{},
 			wantCode: http.StatusOK,
+			wantBody: gin.H{
+				"data":  "success qux",
+				"error": nil,
+			},
 		},
 		{
-			name: "Internal Server Error",
+			name: "Bad Request",
 			mock: func(f fields) {
 				f.helloWorldService.EXPECT().
 					Bar(gomock.Any()).
 					Return(assert.AnError)
 			},
-			wantCode: http.StatusInternalServerError,
+			args:     args{},
+			wantCode: http.StatusBadRequest,
+			wantBody: gin.H{
+				"data":  nil,
+				"error": errors.Join(assert.AnError, ErrKPbpe).Error(),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rr := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(rr)
-
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			mockHelloWorldService := mock.NewMockHelloWorld(ctrl)
-
-			c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
-
 			f := fields{
-				helloWorldService: mockHelloWorldService,
+				helloWorldService: mock.NewMockHelloWorld(ctrl),
 			}
 			tt.mock(f)
 
-			hwc := &HelloWorldController{
+			hw := &HelloWorldController{
 				helloWorldService: f.helloWorldService,
 			}
-			hwc.Qux(c)
+
+			rr := httptest.NewRecorder()
+			ctx, _ := gin.CreateTestContext(rr)
+			reqBody, _ := json.Marshal(tt.args.reqBody)
+			req := httptest.NewRequest(http.MethodGet, "/", bytes.NewReader(reqBody))
+			for k, v := range tt.args.reqHeader {
+				req.Header.Set(k, v)
+			}
+			ctx.Request = req
+
+			hw.Qux(ctx)
 
 			assert.Equal(t, tt.wantCode, rr.Code)
+
+			wantBody, _ := json.Marshal(tt.wantBody)
+			assert.Equal(t, string(wantBody), rr.Body.String())
 		})
 	}
 }

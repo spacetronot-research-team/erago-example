@@ -1,52 +1,31 @@
-package main
+package database
 
 import (
 	"fmt"
-	"log"
-	"path/filepath"
+	"os"
 
-	"github.com/joho/godotenv"
-	migrate "github.com/rubenv/sql-migrate"
-	"github.com/spacetronot-research-team/erago-example/database"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func main() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal(err)
-	}
+func InitializeDB() (*gorm.DB, error) {
+	dbHost := os.Getenv("DB_HOST")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
+	sslMode := os.Getenv("SSL_MODE")
+	tz := os.Getenv("TZ")
 
-	db, err := database.InitializeDB()
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		dbHost, dbUser, dbPass, dbName, dbPort, sslMode, tz,
+	)
+
+	db, err := gorm.Open(postgres.Open(dsn))
 	if err != nil {
-		log.Fatal(err)
+		return nil, fmt.Errorf("fail initialize db session: %v", err)
 	}
 
-	if err := migrationUp(db); err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("migrate up success")
-}
-
-func migrationUp(db *gorm.DB) error {
-	migrate.SetTable("migrations")
-
-	sql, err := db.DB()
-	if err != nil {
-		return fmt.Errorf("'*gorm.DB' fail return '*sql.DB': %v", err)
-	}
-
-	_, err = migrate.Exec(sql, "postgres", getFileMigrationSource(), migrate.Up)
-	if err != nil {
-		return fmt.Errorf("fail execute migrations: %v", err)
-	}
-
-	return nil
-}
-
-func getFileMigrationSource() *migrate.FileMigrationSource {
-	migrations := &migrate.FileMigrationSource{
-		Dir: filepath.Join("database", "schema_migration"),
-	}
-	return migrations
+	return db, err
 }

@@ -31,7 +31,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: ErrEvhqw,
+			wantErr: ErrKPbpe,
 		},
 		{
 			name: "bar err baz",
@@ -45,7 +45,7 @@ func Test_helloWorldService_Bar(t *testing.T) {
 			args: args{
 				ctx: nil,
 			},
-			wantErr: ErrQgogf,
+			wantErr: ErrUyqru,
 		},
 		{
 			name: "bar success",

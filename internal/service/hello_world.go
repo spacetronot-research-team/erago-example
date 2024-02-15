@@ -10,8 +10,8 @@ import (
 //go:generate mockgen -source=hello_world.go -destination=mock/hello_world.go -package=mock
 
 var (
-	ErrEvhqw = errors.New("err jasdfsefs")
-	ErrQgogf = errors.New("err jasdf")
+	ErrKPbpe = errors.New("err jasdfsefs")
+	ErrUyqru = errors.New("err jasdf")
 )
 
 type HelloWorld interface {
@@ -32,11 +32,11 @@ func NewHelloWorldService(helloWorldRepository repository.HelloWorld) HelloWorld
 // Bar blablabla.
 func (hws *helloWorldService) Bar(ctx context.Context) error {
 	if err := hws.helloWorldRepository.Foo(ctx); err != nil {
-		return errors.Join(err, ErrEvhqw)
+		return errors.Join(err, ErrKPbpe)
 	}
 
 	if err := hws.helloWorldRepository.Baz(ctx); err != nil {
-		return errors.Join(err, ErrQgogf)
+		return errors.Join(err, ErrUyqru)
 	}
 
 	return nil

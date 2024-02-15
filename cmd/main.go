@@ -1,22 +1,28 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 	"github.com/spacetronot-research-team/erago-example/database"
+	"github.com/spacetronot-research-team/erago-example/internal/router"
 )
 
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
 	db, err := database.InitializeDB()
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal("err initialize db")
 	}
 
-	fmt.Println(db)
+	ginEngine := gin.Default()
+
+	router.Register(ginEngine, db)
+
+	if err := ginEngine.Run(); err != nil {
+		logrus.Fatal(err)
+	}
 }
