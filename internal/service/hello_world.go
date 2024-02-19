@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 
+	otel "github.com/erajayatech/go-opentelemetry"
 	"github.com/spacetronot-research-team/erago-example/internal/repository"
+	"github.com/spacetronot-research-team/erago-example/pkg/funcs"
 )
 
 //go:generate mockgen -source=hello_world.go -destination=mock/hello_world.go -package=mock
@@ -31,12 +33,21 @@ func NewHelloWorldService(helloWorldRepository repository.HelloWorld) HelloWorld
 
 // Bar blablabla.
 func (hws *helloWorldService) Bar(ctx context.Context) error {
+	ctx, span := otel.NewSpan(ctx, funcs.GetMyName(), "")
+	defer span.End()
+
 	if err := hws.helloWorldRepository.Foo(ctx); err != nil {
-		return errors.Join(err, ErrKPbpe)
+		err = errors.Join(err, ErrKPbpe)
+		otel.AddSpanError(span, err)
+		otel.FailSpan(span, err.Error())
+		return err
 	}
 
 	if err := hws.helloWorldRepository.Baz(ctx); err != nil {
-		return errors.Join(err, ErrUyqru)
+		err = errors.Join(err, ErrUyqru)
+		otel.AddSpanError(span, err)
+		otel.FailSpan(span, err.Error())
+		return err
 	}
 
 	return nil

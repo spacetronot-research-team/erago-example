@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 
+	otel "github.com/erajayatech/go-opentelemetry"
+	"github.com/spacetronot-research-team/erago-example/pkg/funcs"
 	"gorm.io/gorm"
 )
 
@@ -33,8 +35,11 @@ func NewHelloWorldRepository(db *gorm.DB) HelloWorld {
 
 // Foo blablablablabla.
 func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
+	ctx, span := otel.NewSpan(ctx, funcs.GetMyName(), "")
+	defer span.End()
+
 	var quuz int32
-	err := hwr.db.Raw("SELECT 1").Scan(&quuz).Error
+	err := hwr.db.WithContext(ctx).Raw("SELECT 1").Scan(&quuz).Error
 	if err != nil {
 		return errors.Join(err, ErrKPbpe)
 	}
@@ -43,6 +48,9 @@ func (hwr *helloWorldRepository) Foo(ctx context.Context) error {
 
 // Baz blablablablabla.
 func (hwr *helloWorldRepository) Baz(ctx context.Context) error {
+	_, span := otel.NewSpan(ctx, funcs.GetMyName(), "")
+	defer span.End()
+
 	err := gorm.ErrRecordNotFound // error from query
 	if err != nil {
 		return errors.Join(err, ErrUyqru)
